@@ -1,0 +1,313 @@
+<div class="bg-blue-50 h-full w-full flex items-center flex-col">
+  <h1
+    class="font-black text-4xl text-center text-wrap mt-16 mx-4 mb-10 text-blue-800"
+  >
+    GUESS
+    <span class="my-2 flex justify-center items-center text-5xl">
+      <span
+        class="bg-slate-500 text-white border-[1px] border-black shadow-sm shadow-black w-14 h-14 flex justify-center items-center"
+      >
+        W
+      </span>
+      <span
+        class="bg-green-500 text-white border-[1px] border-black shadow-sm shadow-black w-14 h-14 flex justify-center items-center"
+      >
+        O
+      </span>
+      <span
+        class="bg-yellow-500 text-white border-[1px] border-black p-1 shadow-sm shadow-black w-14 h-14 flex justify-center items-center"
+      >
+        R
+      </span>
+      <span
+        class="bg-red-500 text-white border-[1px] border-black p-1 shadow-sm shadow-black w-14 h-14 flex justify-center items-center"
+      >
+        D
+      </span>
+    </span>
+
+    GAME
+  </h1>
+  <div
+    *ngIf="
+      Error === false &&
+      GameStarted === true &&
+      GameFinished === false &&
+      WordFromDB.word !== '' &&
+      WordFromDB.description !== ''
+    "
+    class="w-64 md:mt-10 mb-5 md:-mb-7 md:w-[35rem]"
+  >
+    <h1
+      class="font-black text-xl text-center text-wrap md:mt-0 mx-4 mb-3 text-blue-800"
+    >
+      Word description
+    </h1>
+    <p class="text-center font-bold">{{ WordFromDB!.description }}</p>
+  </div>
+  <div
+    *ngIf="GameFinished"
+    [ngClass]="PlayerWon ? 'bg-green-100' : 'bg-red-100'"
+    class="flex flex-col justify-center items-center p-9 rounded-lg w-64 md:mt-10 mb-5 md:-mb-7 md:w-[35rem]"
+  >
+    <h1
+      [ngClass]="PlayerWon ? 'text-green-700' : 'text-red-700'"
+      class="font-black text-3xl text-center text-wrap md:mt-0 mx-4 mb-3"
+    >
+      {{ PlayerWon ? "YOU WON" : "YOU LOST" }}
+    </h1>
+    <p class="text-center font-bold">The word was</p>
+    <p class="text-xl my-5 text-center font-extrabold text-blue-800">
+      {{ WordFromDB!.word.toUpperCase() }}
+    </p>
+    <button
+      (click)="Restart()"
+      class="flex-grow w-full border-2 border-blue-800 bg-blue-800 text-white font-bold p-3 rounded-xl mt-3"
+    >
+      Play Again
+    </button>
+  </div>
+  <div
+    class="md:flex-col md:mt-10 md:flex md:justify-center md:items-center md:gap-5"
+  >
+    <app-gamesettings
+      (Settings)="GetGameSettings($event)"
+      *ngIf="GameStarted === false"
+    ></app-gamesettings>
+    <app-game
+      *ngIf="
+        Error === false &&
+        GameStarted === true &&
+        WordFromDB.word !== '' &&
+        WordFromDB.description !== ''
+      "
+      [NumberOfLettersInGame]="FinalNumberOfLetter"
+      [NumberOfTriesInGame]="FinalNumberOfTries"
+      [SelectedWord]="WordFromDB"
+      [NumberOfHints]="FinalNumberOfHints"
+      (GameStatus)="DisplayGameResults($event)"
+    ></app-game>
+    <app-loading
+      *ngIf="
+        Error === false &&
+        GameStarted === true &&
+        WordFromDB.word === '' &&
+        WordFromDB.description === ''
+      "
+    ></app-loading>
+    <p
+      *ngIf="Error === true"
+      class="text-xl mx-5 mt-10 text-center text-wrap md:text-3xl text-white bg-red-500 p-5"
+    >
+      An error occurred, please try again later
+    </p>
+  </div>
+  <div
+    class="md:flex-row md:my-10 md:flex md:justify-center md:items-center md:gap-5"
+  >
+    <div class="mt-16 flex flex-col items-center">
+      <h2
+        class="font-black text-3xl text-center text-wrap mt-16 md:mt-0 mx-4 mb-3 text-blue-800"
+      >
+        Colors <fa-icon class="ml-1" [icon]="this.faPaintBrush"></fa-icon>
+      </h2>
+      <div
+        class="md:h-[10.1rem] md:max-w-[21rem] overflow-hidden md:w-80 w-screen md:flex-row flex flex-col gap-2 items-center bg-green-200 p-5"
+      >
+        <div
+          class="w-10 h-10 bg-green-600 rounded-full border-2 border-green-950"
+        ></div>
+        <div class="font-semibold text-green-950">
+          Letter is correct and in place
+        </div>
+      </div>
+      <div
+        class="md:h-[10.1rem] md:max-w-[21rem] overflow-hidden md:w-80 w-screen md:flex-row flex flex-col gap-2 items-center bg-yellow-200 p-5"
+      >
+        <div
+          class="w-10 h-10 bg-yellow-600 rounded-full border-2 border-yellow-950"
+        ></div>
+        <div class="font-semibold text-yellow-950">
+          Letter is correct but not in place
+        </div>
+      </div>
+      <div
+        class="md:h-[10.1rem] md:max-w-[21rem] overflow-hidden md:w-80 w-screen md:flex-row flex flex-col gap-2 items-center bg-red-200 p-5"
+      >
+        <div
+          class="w-10 h-10 bg-red-600 rounded-full border-2 border-red-950"
+        ></div>
+        <div class="font-semibold text-red-950">Letter is wrong</div>
+      </div>
+    </div>
+
+    <div class="mt-16 flex flex-col items-center">
+      <h2
+        class="font-black text-3xl text-center text-wrap mt-16 md:mt-0 mx-4 mb-3 text-blue-800"
+      >
+        Controls <fa-icon class="ml-1" [icon]="this.faKeyboard"></fa-icon>
+      </h2>
+      <div
+        class="text-sm md:max-w-[21rem] overflow-hidden md:w-80 w-screen md:flex-row flex flex-col gap-2 items-center bg-gray-200 p-[1.1rem]"
+      >
+        <div class="flex gap-2">
+          <button disabled class="delete-button">←</button>
+          <button disabled class="delete-button">→</button>
+        </div>
+
+        <div class="md:ml-2 font-semibold text-black text-xs">
+          <h5>Change numbers / Move cursor</h5>
+        </div>
+      </div>
+      <div
+        class="text-sm md:max-w-[21rem] overflow-hidden md:w-80 w-screen md:flex-row flex flex-col gap-2 items-center bg-gray-200 p-[1.1rem]"
+      >
+        <div class="flex gap-2">
+          <button disabled class="delete-button">↑</button>
+          <button disabled class="delete-button">↓</button>
+        </div>
+
+        <div class="md:ml-2 font-semibold text-black text-xs">Change field</div>
+      </div>
+      <div
+        class="text-sm md:max-w-[21rem] overflow-hidden md:w-80 w-screen md:flex-row flex flex-col gap-2 items-center bg-gray-200 p-[1.1rem]"
+      >
+        <button disabled class="delete-button enter">Enter</button>
+        <div class="font-semibold text-black text-xs">
+          Start Game / Check Word
+        </div>
+      </div>
+      <div
+        class="text-sm md:max-w-[21rem] overflow-hidden md:w-80 w-screen md:flex-row flex flex-col gap-2 items-center bg-gray-200 p-[1.1rem]"
+      >
+        <button disabled class="delete-button ctrl mx-7">Ctrl</button>
+        <div class="font-semibold text-black text-xs">Hint</div>
+      </div>
+      <div
+        class="text-sm md:max-w-[21rem] overflow-hidden md:w-80 w-screen md:flex-row flex flex-col items-center bg-gray-200 p-[1.1rem]"
+      >
+        <div class="flex gap-1 md:gap-0 justify-center items-center">
+          <button disabled class="delete-button ctrl">Ctrl</button>
+          <span class="font-extrabold text-md mx-1">+</span>
+          <button disabled class="delete-button ctrl">R</button>
+        </div>
+
+        <div class="md:ml-2 mt-2 md:mt-0 font-semibold text-black text-xs">
+          Restart
+        </div>
+      </div>
+      <div
+        class="text-sm md:max-w-[21rem] overflow-hidden md:w-80 w-screen md:flex-row flex flex-col items-center bg-gray-200 p-5"
+      >
+        <div class="flex gap-1 md:gap-0 justify-center items-center">
+          <svg
+            width="40px"
+            height="40px"
+            viewBox="0 0 100 100"
+            xmlns="http://www.w3.org/2000/svg"
+            version="1.1"
+          >
+            <path
+              style="fill: #444; stroke: #333"
+              d="M 29,19 C 26,15 23,16 18,15 10,14 5.7,8.5 4.7,-0.42 l 5.1,-0 C 9.8,-0.43 8.9,10 22,11 c 6,0 9,2 11,6 1,1 -4,2 -4,2 z"
+            />
+            <path
+              style="fill: #444; stroke: #333; stroke-width: 2"
+              d="m 67,20 c 14,9 26,24 30,39 2,9 3,26 -11,33 C 71,99 57,100 41,88 26,76 12,59 6.8,52 3.4,48 1.9,44 2.5,37 2.4,32 2.2,31 13,25 36,15 46,16 54,16 c 7,0 13,4 13,4 z"
+            />
+            <path
+              style="fill: #626262; stroke: #ccc"
+              d="m 81,32 c 2,5 -20,11 -20,11 0,0 -12,-19 -28,-25 0,0 12,-2 19,-2 5,0 10,0 19,6 6,5 10,10 10,10 z M 8.4,28 C 19,32 29,44 31,48 c 2,3 2,4 10,3 8,-1 19,-8 19,-8 C 60,43 48,24 32,18 27,20 15,24 8.4,28 z"
+            />
+            <path
+              style="fill: #333; stroke: #ccc; stroke-width: 1.5"
+              d="M 40,22 C 37,25 49,36 52,32 56,29 45,19 40,22 z"
+            />
+            <path
+              style="fill: none; stroke: #222; stroke-width: 2"
+              d="m 67,20 c 14,9 26,24 30,39 2,9 3,26 -11,33 C 71,99 57,100 41,88 26,76 12,59 6.8,52 3.4,48 1.9,44 2.5,37 2.4,32 2.2,31 13,25 36,15 46,16 54,16 c 7,0 13,4 13,4 z"
+            />
+            <path
+              style="fill: #ccc"
+              d="M 32,53 C 43,77 76,92 96,64 80,98 39,84 32,53 z"
+            />
+          </svg>
+          <span class="font-extrabold text-md mx-1">or</span>
+          <svg
+            width="45px"
+            height="45px"
+            version="1.1"
+            id="Layer_1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px"
+            y="0px"
+            viewBox="0 0 512 512"
+            style="enable-background: new 0 0 512 512"
+            xml:space="preserve"
+          >
+            <style type="text/css">
+              .st0 {
+                fill: #444444;
+              }
+              .st1 {
+                fill: #ecf0f1;
+              }
+              .st2 {
+                fill: #ffd7b3;
+              }
+              .st3 {
+                fill: #231f20;
+              }
+            </style>
+            <path
+              class="st0"
+              d="M322.2,436.5H117.5c-14,0-25.4-11.4-25.4-25.4v-375c0-14,11.4-25.4,25.4-25.4h204.7c14,0,25.4,11.4,25.4,25.4
+                            v375C347.6,425.1,336.2,436.5,322.2,436.5z"
+            />
+            <rect x="92.1" y="66.5" class="st1" width="255.5" height="314.1" />
+            <path
+              class="st2"
+              d="M419.9,335.5c0-16.2-12-29.3-28.2-29.3l0,0c-16.2,0-28.2,13.1-28.2,29.3c0-16.2-12-29.3-28.2-29.3l0,0
+                            c-16.2,0-28.2,13.1-28.2,29.3c0-16.2-12-29.3-28.2-29.3l0,0c-16.2,0-28.2,13.1-28.2,29.3V195.2c0-16.2-12-29.3-28.2-29.3l0,0
+                            c-16.2,0-28.2,13.1-28.2,29.3v210.9c0,15.4,5.2,30.3,14.6,42.3l0,0c9.5,12.1,14.6,27,14.6,42.3v10.6h167.2v-10.6
+                            c0-15.4,5.2-30.3,14.6-42.3l0,0c9.5-12.1,14.6-27,14.6-42.3L419.9,335.5L419.9,335.5z"
+            />
+            <g>
+              <path
+                class="st3"
+                d="M220.8,107.4c-48.4,0-87.8,39.4-87.8,87.8c0,5.9,4.8,10.6,10.6,10.6s10.6-4.8,10.6-10.6
+                                c0-36.7,29.9-66.5,66.5-66.5s66.5,29.9,66.5,66.5c0,5.9,4.8,10.6,10.6,10.6s10.6-4.8,10.6-10.6
+                                C308.6,146.8,269.2,107.4,220.8,107.4z"
+              />
+              <path
+                class="st3"
+                d="M391.7,295.6c-11.2,0-21.2,4.6-28.2,12.2c-1.6-1.7-3.3-3.3-5.2-4.7V36.1c0-19.9-16.2-36.1-36.1-36.1H117.5
+                                C97.6,0,81.4,16.2,81.4,36.1v375c0,19.9,16.2,36.1,36.1,36.1h77.6c1.6,2.7,3.4,5.3,5.4,7.8c8,10.1,12.4,22.8,12.4,35.8v10.6
+                                c0,5.9,4.8,10.6,10.6,10.6h167.2c5.9,0,10.6-4.8,10.6-10.6v-10.6c0-12.9,4.4-25.6,12.4-35.8c10.9-13.9,16.9-31.2,16.9-48.9v-70.5
+                                C430.6,313.1,413.5,295.6,391.7,295.6z M335.3,295.6c-11.2,0-21.2,4.6-28.2,12.2c-7-7.6-17-12.2-28.2-12.2
+                                c-6.4,0-12.3,1.5-17.6,4.2V195.2c0-22.4-17.1-39.9-38.9-39.9s-38.9,17.5-38.9,39.9V370h-80.8V77.2H337v218.5
+                                C336.4,295.6,335.8,295.6,335.3,295.6z M117.5,21.3h204.7c8.1,0,14.8,6.6,14.8,14.8v19.8H102.7V36.1
+                                C102.7,27.9,109.4,21.3,117.5,21.3z M117.5,425.9c-8.1,0-14.8-6.6-14.8-14.8v-19.8h80.8v14.8c0,6.7,0.9,13.4,2.5,19.8L117.5,425.9
+                                L117.5,425.9z M409.3,406.1c0,12.9-4.4,25.6-12.4,35.7c-1.9,2.4-3.6,4.8-5.1,7.4h-79.3c-5.9,0-10.6,4.8-10.6,10.6
+                                s4.8,10.6,10.6,10.6h70.2c-1.7,6.6-2.7,13.4-2.7,20.2H234.1c0-17.7-6-35-16.9-48.9c-8-10.1-12.4-22.8-12.4-35.7V195.2
+                                c0-10.6,7.6-18.6,17.6-18.6s17.6,8,17.6,18.6v140.3c0,5.9,4.8,10.6,10.6,10.6c5.9,0,10.6-4.8,10.6-10.6c0-10.6,7.6-18.6,17.6-18.6
+                                c10,0,17.6,8,17.6,18.6c0,5.9,4.8,10.6,10.6,10.6s10.6-4.8,10.6-10.6c0-10.6,7.6-18.6,17.6-18.6c10,0,17.6,8,17.6,18.6
+                                c0,5.9,4.8,10.6,10.6,10.6s10.6-4.8,10.6-10.6c0-10.6,7.6-18.6,17.6-18.6s17.6,8,17.6,18.6L409.3,406.1L409.3,406.1z"
+              />
+              <path
+                class="st3"
+                d="M272.5,449.2h-4.8c-5.9,0-10.6,4.8-10.6,10.6s4.8,10.6,10.6,10.6h4.8c5.9,0,10.6-4.8,10.6-10.6
+                                C283.2,454,278.4,449.2,272.5,449.2z"
+              />
+            </g>
+          </svg>
+        </div>
+
+        <div class="mt-2 md:mt-0 font-semibold text-black text-xs">
+          All of the above
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

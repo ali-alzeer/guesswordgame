@@ -1,0 +1,27 @@
+:root{
+    --correct-green : #16a34a;
+    --semi-correct-yellow : #ca8a04;
+    --wrong-red : #dc2626;
+    --text-color : white; 
+}
+
+.disabled-input{
+    opacity: .5;
+    pointer-events: none;
+}
+
+.correct{
+    background-color: var(--correct-green);
+    color: var(--text-color);
+    color:#444444
+}
+
+.semi-correct{
+    background-color: var(--semi-correct-yellow);
+    color: var(--text-color);
+}
+
+.wrong{
+    background-color: var(--wrong-red);
+    color: var(--text-color);
+}

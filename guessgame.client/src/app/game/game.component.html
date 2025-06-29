@@ -1,0 +1,71 @@
+<div class="flex justify-center items-center flex-col">
+    
+    <div class="bg-white m-5 p-5 rounded-xl">
+        @for (try of TriesArray; track $index) {
+            <div #divOfInputs>
+                @if(try !== 10){
+                    @if(try === currentTry){
+                        <span #TrySpan class="font-bold mr-3 -mt-5">TRY 0{{try}}</span>
+                    }
+                    @else {
+                        <span #TrySpan class="font-bold mr-3 -mt-5 disabled-input">TRY 0{{try}}</span>
+                    }
+                }
+                @else {
+                    @if(try === currentTry){
+                        <span #TrySpan class="font-bold mr-3 -mt-5">TRY {{try}}</span>
+                    }
+                    @else {
+                        <span #TrySpan class="font-bold mr-3 -mt-5 disabled-input">TRY {{try}}</span>
+                    }
+                }
+                <!-- @if (NumberOfLettersInGame > 5) {
+                    @for (letter of LettersArray; track $index) {
+                        @if (try === 1) {
+                            <input #input maxlength="1" class="focus:outline-1 focus:outline-blue-200 border-t-2 border-t-blue-200 border-x-2 border-x-blue-200 text-center font-bold border-b-2 border-black w-5 h-5 md:w-10 md:h-10 text-3xl " type="text">
+                        }
+                        @else {
+                            <input #input [disabled]="true" maxlength="1" class="disabled-input focus:outline-1 focus:outline-blue-200 border-t-2 border-t-blue-200 text-center font-bold border-x-2 border-x-blue-200 border-b-2 border-black w-5 h-5 md:w-10 md:h-10 text-3xl " type="text">
+                        }
+                    }
+                } -->
+                
+                    @for (letter of LettersArray; track $index) {
+                        @if (try === 1) {
+                            @if (NumberOfLettersInGame > 5) {
+                                <input #Input maxlength="1"  class="w-5 h-5 text-md focus:outline-1 focus:outline-blue-200 text-center font-bold border-t-2 border-t-blue-200 border-b-2 border-x-2 border-x-blue-200 border-black md:w-10 md:h-10  md:text-3xl" type="text">
+                            }
+                            @else {
+                                <input #Input maxlength="1"  class="w-10 h-10 text-3xl focus:outline-1 focus:outline-blue-200 text-center font-bold border-t-2 border-t-blue-200 border-b-2 border-x-2 border-x-blue-200 border-black md:w-10 md:h-10  md:text-3xl" type="text">
+                            }
+                        }
+                        @else {
+                            @if (NumberOfLettersInGame > 5) {
+                                <input #Input [disabled]="true" maxlength="1" class="w-5 h-5 text-md disabled-input focus:outline-1 focus:outline-blue-200 border-t-2 border-t-blue-200 border-x-2 border-x-blue-200 text-center font-bold border-b-2 border-black md:w-10 md:h-10  md:text-3xl" type="text">
+                            }
+                            @else {
+                                <input #Input [disabled]="true" maxlength="1" class="w-10 h-10 text-3xl disabled-input focus:outline-1 focus:outline-blue-200 border-t-2 border-t-blue-200 border-x-2 border-x-blue-200 text-center font-bold border-b-2 border-black md:w-10 md:h-10  md:text-3xl" type="text">
+                            }
+                        }
+            
+                }
+                
+            </div>
+        }
+    </div>
+    
+    <div class="flex flex-col gap-1">
+        <button #ButtonCheck (click)="CheckWord()" class="w-64 border-2 border-blue-800 bg-blue-800 text-white font-bold p-3 rounded-t-xl disabled:bg-slate-700 disabled:text-slate-300 disabled:border-slate-700">Check Word</button>
+        <button #ButtonHint [disabled]="NumberOfHints === 0" (click)="Hint()" class="w-64 border-2 border-blue-900 bg-blue-100 text-blue-900 font-bold p-3 disabled:bg-slate-700 disabled:text-slate-300 disabled:border-slate-700">{{NumberOfHints}}{{ NumberOfHints !== 1 ? " Hints" : " Hint" }}</button>
+    </div>
+    
+    <div class="flex justify-center items-center w-64 mt-1">
+        <button #ButtonRestart (click)="Restart()" class="flex-grow disabled:bg-slate-700 disabled:text-slate-300 flex disabled:border-slate-700 justify-center items-center text-xl w-12 h-12  rounded-b-xl border-2 border-blue-800 bg-blue-800 text-white font-bold text-center" >
+            <fa-icon [icon]="faRefresh"></fa-icon>
+        </button>
+    </div>
+    <div *ngIf="false">
+        CONGRATULATIONS YOU WON
+    </div>
+    
+</div>

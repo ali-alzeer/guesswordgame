@@ -1,0 +1,6 @@
+@guessgame.server_HostAddress = http://localhost:5085
+
+GET {{guessgame.server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

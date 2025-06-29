@@ -1,0 +1,179 @@
+<div class="bg-blue-50 h-auto w-full flex items-center flex-col">
+    
+    <div class="text-center flex flex-col justify-center items-center gap-5 bg-red-500 text-white text-xl p-5 m-5 text-wrap">
+        <h1 class="font-black text-4xl text-red-600 bg-white px-5 py-3">WARNING</h1>
+        <h1 class="text-2xl font-bold">This page is not for users</h1>
+        <h1>If you got here by mistake, click the button to return to Home page</h1>
+        <fa-icon class="text-4xl animate-bounce" [icon]="faArrowDown"></fa-icon>
+        <div class="text-center flex flex-col justify-center items-center text-xl text-wrap">
+            <button [routerLink]="['/']" class=" shadow-md shadow-black text-white text-2xl font-bold p-5 rounded-xl bg-blue-600">Go To Home Page</button>
+        </div>
+    </div>
+    
+    <div *ngIf="!admin" class="text-center flex flex-col justify-center items-center gap-5 bg-blue-100 rounded-xl text-blue-950 p-5 m-20 text-wrap">
+        <form (submit)="Login($event)">
+            <h1 class="font-black text-4xl text-center text-wrap p-5 mb-10 text-blue-800">
+                LOGIN
+            </h1>
+            <div class="flex flex-col gap-5 justify-center items-center" >
+                <label class="flex flex-col gap-2 font-bold">
+                    FIRST
+                    <input #first class="font-normal p-2" type="text">
+                </label>
+                <label class="flex flex-col gap-2 font-bold">
+                    SECOND
+                    <input #second class="font-normal p-2" type="text">
+                </label>
+                <button *ngIf="wrong" disabled class="mt-5 w-full text-red-700 text-2xl font-bold p-5 rounded-xl bg-red-100">WRONG</button>
+                <button type="submit" class="mt-5 w-full  shadow-md shadow-black text-white text-2xl font-bold p-5 rounded-xl bg-blue-600">LOGIN</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- ADMIN FORMS -->
+    <div  *ngIf="admin" class="text-center flex flex-col justify-center items-center gap-5 bg-green-100 border-2 border-black rounded-xl text-blue-950 p-5 m-20 text-wrap">
+        <h1 class="font-black text-4xl text-center text-wrap p-5 text-green-800">
+            ADMIN
+        </h1>
+        <div class="flex flex-wrap flex-col md:flex-row gap-5 justify-center items-center">
+            
+            
+            <!-- GET ALL -->
+        <div class="border-2 border-black p-5">
+            <div class="flex flex-col gap-5 justify-center items-center" >
+                <label class="flex flex-col gap-2 font-bold">
+                    Order By
+                    <input #GetAllOrderBy class="font-normal p-2" type="text">
+                </label>
+                <label class="flex flex-col gap-2 font-bold">
+                    Desc
+                    <input #GetAllDesc class="font-normal p-2" type="checkbox">
+                </label>
+                <button (click)="GetAll()" class="mt-5 w-full shadow-md shadow-black text-white text-2xl font-bold p-5 rounded-xl bg-blue-600">GET ALL</button>
+            </div>
+        </div>
+
+        <!-- GET PAGE -->
+        <div class="border-2 border-black p-5">
+            <div class="flex flex-col gap-5 justify-center items-center" >
+                <label class="flex flex-col gap-2 font-bold">
+                    Order By
+                    <input #GetPageOrderBy class="font-normal p-2" type="text">
+                </label>                
+                <label class="flex flex-col gap-2 font-bold">
+                    Page Number
+                    <input #GetPageNumber class="font-normal p-2" type="number">
+                </label>
+                <label class="flex flex-col gap-2 font-bold">
+                    Page Size
+                    <input #GetPageSize class="font-normal p-2" type="number">
+                </label>
+                <label class="flex flex-col gap-2 font-bold">
+                    Desc
+                    <input #GetPageDesc class="font-normal p-2" type="checkbox">
+                </label>
+                <button (click)="GetPage()" class="mt-5 w-full  shadow-md shadow-black text-white text-2xl font-bold p-5 rounded-xl bg-blue-600">GET PAGE</button>
+            </div>
+        </div>
+        
+        <!-- GET WORDS BY LETTERS COUNT -->
+        <div class="border-2 border-black p-5">
+            <div class="flex flex-col gap-5 justify-center items-center" >
+                <label class="flex flex-col gap-2 font-bold">
+                    Letters Count
+                    <input #GetByLettersCountLettersCount class="font-normal p-2" type="number">
+                </label>
+                <label class="flex flex-col gap-2 font-bold">
+                    Order By
+                    <input #GetByLettersCountOrderBy class="font-normal p-2" type="text">
+                </label>                
+                <label class="flex flex-col gap-2 font-bold">
+                    Desc
+                    <input #GetByLettersCountDesc class="font-normal p-2" type="checkbox">
+                </label>
+                <button (click)="GetWordsByLettersCount()" class="mt-5 w-full  shadow-md shadow-black text-white text-2xl font-bold p-5 rounded-xl bg-blue-600">GET BY LETTERS COUNT</button>
+            </div>
+        </div>
+        
+        <!-- POST -->
+        <div class="border-2 border-black p-5">
+            <div class="flex flex-col gap-5 justify-center items-center" >
+            
+            <label class="flex flex-col gap-2 font-bold">
+                Word
+                <input #PostWord class="font-normal p-2" type="text">
+            </label>
+            <label class="flex flex-col gap-2 font-bold">
+                Description
+                <input #PostDescription class="font-normal p-2" type="text">
+            </label>
+
+                <button (click)="Post()" class="mt-5 w-full  shadow-md shadow-black text-white text-2xl font-bold p-5 rounded-xl bg-green-600">POST</button>
+            </div>
+        </div>
+
+        <!-- PUT -->
+        <div class="border-2 border-black p-5">
+            <div class="flex flex-col gap-5 justify-center items-center" >
+                <label class="flex flex-col gap-2 font-bold">
+                    Id
+                    <input #PutId class="font-normal p-2" type="number">
+                </label>
+                <label class="flex flex-col gap-2 font-bold">
+                    Word
+                    <input #PutWord class="font-normal p-2" type="text">
+                </label>
+                <label class="flex flex-col gap-2 font-bold">
+                    Description
+                    <input #PutDescription class="font-normal p-2" type="text">
+                </label>
+
+                <button (click)="Put()" class="mt-5 w-full  shadow-md shadow-black text-white text-2xl font-bold p-5 rounded-xl bg-orange-600">PUT</button>
+            </div>
+        </div>
+
+        <!-- DELETE -->
+        <div class="border-2 border-black p-5">
+            <div class="flex flex-col gap-5 justify-center items-center" >
+                <label class="flex flex-col gap-2 font-bold">
+                    Id
+                    <input #DeleteId class="font-normal p-2" type="number">
+                </label>
+                <button (click)="DeleteWord()" class="mt-5 w-full  shadow-md shadow-black text-white text-2xl font-bold p-5 rounded-xl bg-red-600">DELETE</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div  *ngIf="(admin && ErrorHappened)" class="mb-5 text-center flex flex-col justify-center items-center gap-5 bg-white border-2 border-black rounded-xl text-black p-5 text-wrap">
+        <h1 class="text-2xl font-bold text-red-700">{{ErrorToShow}}</h1>
+    </div>
+
+    <div  *ngIf="admin" class="mb-5 text-center flex flex-col justify-center items-center gap-5 bg-white border-2 border-black rounded-xl text-black p-5 text-wrap">
+        <h1 class="text-2xl">(<span #count class="font-bold">{{words.length}}</span>) rows got after (<span #getmethod class="font-bold">{{getMethodUsed}}</span>) at ({{timeNow}})</h1>
+    </div>
+
+    <div  *ngIf="admin" class="text-center flex flex-col justify-center items-center gap-5 bg-white border-2 border-black rounded-xl text-black p-5 text-wrap">
+        <h1 class="text-2xl">(<span #rows class="font-bold">{{rowsAffected}}</span>) rows affected after (<span #method class="font-bold">{{methodUsed}}</span>) at ({{timeNow}})</h1>
+    </div>
+
+    <div  *ngIf="admin" class="text-center flex flex-col justify-center items-center gap-5 bg-white border-2 border-black rounded-xl text-black p-5 m-20 text-wrap">
+        <table>
+            <tr class="bg-teal-950 text-white">
+                <th class="p-3">Id</th>
+                <th class="p-3">Word</th>
+                <th class="p-3">LettersCount</th>
+                <th class="p-3">Description</th>
+            </tr>
+        
+            @for (word of words; track $index) {
+                <tr class="even:bg-green-100 odd:bg-blue-100 text-black">
+                    <td class="p-1">{{word.id}}</td>
+                    <td class="p-1">{{word.word}}</td>
+                    <td class="p-1">{{word.lettersCount}}</td>
+                    <td class="p-1">{{word.description}}</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
